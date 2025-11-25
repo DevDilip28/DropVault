@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // ---- Parse request with simple TS typing ----
         const body = (await request.json()) as {
             imagekit: {
                 name: string;
@@ -36,7 +35,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid ImageKit data" }, { status: 400 });
         }
 
-        // ---- Validate parent folder (if provided) ----
         let finalParentId: string | null = null;
 
         if (parentId) {
@@ -61,7 +59,6 @@ export async function POST(request: NextRequest) {
             finalParentId = parentId;
         }
 
-        // ---- Build DB row ----
         const newFile = {
             name: imagekit.name || "untitled",
             path: imagekit.filePath,
@@ -76,7 +73,6 @@ export async function POST(request: NextRequest) {
             isTrash: false,
         };
 
-        // ---- Insert into DB ----
         const [created] = await db.insert(files).values(newFile).returning();
 
         return NextResponse.json(created);
