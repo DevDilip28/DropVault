@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import ImageKit from "imagekit";
-
-const imagekit = new ImageKit({
-    publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "",
-    urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "",
-});
+import { getUploadAuthParams } from "@imagekit/next/server";
 
 export async function GET() {
     try {
@@ -15,12 +9,22 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const authParams = imagekit.getAuthenticationParameters();    //token, expire, signature 
-        return NextResponse.json(authParams);
+        // Generate secure upload auth params 
+        const { token, expire, signature } = getUploadAuthParams({
+            privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
+            publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
+        });
+
+        return NextResponse.json({
+            token,
+            expire,
+            signature,
+            publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
+        });
     } catch (error) {
-        console.error("Error generating ImageKit auth params:", error);
+        console.error("ImageKit auth error:", error);
         return NextResponse.json(
-            { error: "Failed to generate authentication parameters" },
+            { error: "Failed to generate upload credentials" },
             { status: 500 }
         );
     }

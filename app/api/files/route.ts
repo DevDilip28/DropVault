@@ -12,24 +12,30 @@ export async function GET(request: NextRequest) {
         }
 
         const searchParams = request.nextUrl.searchParams;
-        const queryUserId = searchParams.get("userId");
         const parentId = searchParams.get("parentId");
 
-        if (!queryUserId || queryUserId !== userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
         let userFiles;
+
         if (parentId) {
             userFiles = await db
                 .select()
                 .from(files)
-                .where(and(eq(files.userId, userId), eq(files.parentId, parentId)));
+                .where(
+                    and(
+                        eq(files.userId, userId),
+                        eq(files.parentId, parentId)
+                    )
+                );
         } else {
             userFiles = await db
                 .select()
                 .from(files)
-                .where(and(eq(files.userId, userId), isNull(files.parentId)));
+                .where(
+                    and(
+                        eq(files.userId, userId),
+                        isNull(files.parentId)
+                    )
+                );
         }
 
         return NextResponse.json(userFiles);
