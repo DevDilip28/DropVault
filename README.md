@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 DropVault — Secure Photo & PDF Storage Manager
 
-## Getting Started
+DropVault is a clean, modern, full-stack **photo & PDF storage manager** designed to securely upload, store, preview, and manage files in the cloud.  
+Built using **Next.js + TypeScript**, powered by **Clerk authentication**, **ImageKit uploads**, and **Postgres (Neon) with Drizzle ORM**.
 
-First, run the development server:
+🔗 **Live Demo:** https://www.dropvault.site/  
+📦 **Tech Stack:** Next.js, TypeScript, TailwindCSS, Clerk Auth, ImageKit, Drizzle ORM, Neon Postgres
+
+---
+
+## ⭐ Features
+
+### 🔐 Authentication & User Management
+- Seamless login/signup using **Clerk Auth**
+- Fully protected routes
+- Secure session handling
+- Zod validation for inputs
+
+### 📤 End-to-End File Upload System
+- Uploads handled via **ImageKit**
+- Auto-generated **unique filenames**
+- File type validation (Images + PDFs)
+- Metadata stored in Postgres (Neon)
+- Smooth upload experience with real-time status
+
+### 🗂️ File Management System
+- Designed schema using **Drizzle**
+- View/manage all uploaded files
+- File filtering by type
+- Clean and responsive dashboard UI
+
+### ⚡ Clean & Smooth Frontend UI
+- Built with **Next.js App Router**
+- Minimal, distraction-free design
+- Smooth transitions and optimized rendering
+- Continuous UI/UX polishing
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 15**
+- **TypeScript**
+- **TailwindCSS**
+- **Zod** (validation)
+- **Clerk Auth**
+
+### Backend / Server Actions
+- **Next.js App Router**
+- **ImageKit**
+- **Drizzle ORM**
+- **PostgreSQL (Neon)**
+
+### Database
+- **Neon** (serverless Postgres)
+- Drizzle migrations + schema
+
+---
+
+## 📦 Core Architecture
+
+- **Next.js App Router** for full-stack routing  
+- **Clerk** for auth and user identity  
+- **ImageKit** as file upload + CDN layer  
+- **Drizzle + Neon** for storing metadata  
+
+
+---
+
+## 🚀 Build-in-Public Progress
+
+- 🔐 Clerk Auth integrated  
+- 🧩 Sign-in & Sign-up components built  
+- 📁 File schema designed  
+- 📤 ImageKit upload system implemented  
+- 🗂️ Metadata stored in Postgres  
+- 🛠️ API routes wired  
+- ⚡ Frontend UI polishing in progress  
+
+---
+
+## 🧪 Local Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/DevDilip28/DropVault
+cd DropVault
+
+pnpm install
 pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
