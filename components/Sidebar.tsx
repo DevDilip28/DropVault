@@ -2,7 +2,12 @@
 
 import { FileText, Upload, User, HardDrive } from "lucide-react";
 
-export default function Sidebar({ active, setActive }) {
+type SidebarProps = {
+  active: string;
+  setActive: (value: string) => void;
+};
+
+export default function Sidebar({ active, setActive }: SidebarProps) {
   return (
     <>
       <aside className="hidden lg:flex w-64 h-screen border-r bg-white p-6 flex-col">

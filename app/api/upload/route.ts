@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
             isTrash: false,
         };
 
+
         const [created] = await db.insert(files).values(newFile).returning();
 
         return NextResponse.json(created);

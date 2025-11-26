@@ -7,7 +7,12 @@ import UserProfile from "@/components/UserProfile";
 import FileList from "@/components/FileList";
 import { FileText, Upload, User, HardDrive } from "lucide-react";
 
-export default function DashboardContent({ userId, userName }) {
+type DashboardContentProps = {
+  userId: string;
+  userName: string;
+};
+
+export default function DashboardContent({ userId, userName }: DashboardContentProps) {
   const [activePage, setActivePage] = useState("files");
 
   return (

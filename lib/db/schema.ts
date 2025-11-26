@@ -16,7 +16,7 @@ export const files = pgTable("files", {
   size: integer("size").notNull(),
   type: text("type").notNull(),
 
-  fileUrl: text("file_url").notNull(),
+  fileUrl: text("file_url"),
   thumbnailUrl: text("thumbnail_url"),
 
   userId: text("user_id").notNull(),

@@ -1,28 +1,50 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { upload } from "@imagekit/next";
+import { upload, UploadResponse } from "@imagekit/next";
 import { Upload, FileUp, X, AlertTriangle } from "lucide-react";
 
-export default function UploadFile({ userId, parentId }) {
-  const fileInputRef = useRef(null);
+type UploadFileProps = {
+  userId: string;
+  parentId?: string | null;
+};
 
-  const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
+type ImageKitAuth = {
+  signature: string;
+  expire: number;
+  token: string;
+  publicKey: string;
+};
 
-  const handleSelect = (e) => {
+export default function UploadFile({ userId, parentId }: UploadFileProps) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [file, setFile] = useState<File | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  const generateUUID = (): string =>
+    window.crypto?.randomUUID
+      ? window.crypto.randomUUID()
+      : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
 
-    const ext = selected.name.split(".").pop().toLowerCase();
+    const ext = selected.name.split(".").pop()?.toLowerCase() || "";
     const allowed = ["jpg", "jpeg", "png", "gif", "pdf"];
 
     if (!allowed.includes(ext)) {
       setError("File type not allowed");
       return;
     }
+
     if (selected.size > 20 * 1024 * 1024) {
       setError("Max 20MB allowed");
       return;
@@ -35,28 +57,42 @@ export default function UploadFile({ userId, parentId }) {
   const handleUpload = async () => {
     if (!file) return;
 
-    const ext = file.name.split(".").pop();
+    const ext = file.name.split(".").pop() || "";
     setUploading(true);
     setProgress(0);
 
-    const auth = await fetch("/api/imagekit-auth").then((r) => r.json());
+    const auth: ImageKitAuth = await fetch("/api/imagekit-auth").then((r) =>
+      r.json()
+    );
 
     const folderPath = parentId
       ? `/dropvault/${userId}/folders/${parentId}`
       : `/dropvault/${userId}/root`;
 
-    const ikRes = await upload({
+    const ikRes: UploadResponse = await upload({
       file,
-      fileName: `${crypto.randomUUID()}.${ext}`,
+      fileName: `${generateUUID()}.${ext}`,
       folder: folderPath,
-      ...auth,
-      onProgress: (evt) => setProgress((evt.loaded / evt.total) * 100),
+      publicKey: auth.publicKey,
+      signature: auth.signature,
+      expire: auth.expire,
+      token: auth.token,
+      onProgress: (evt: ProgressEvent) => {
+        if (evt.lengthComputable) {
+          setProgress((evt.loaded / evt.total) * 100);
+        }
+      },
     });
+
 
     await fetch("/api/upload", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imagekit: ikRes, userId, parentId }),
+      body: JSON.stringify({
+        imagekit: ikRes,
+        userId,
+        parentId,
+      }),
     });
 
     setFile(null);
@@ -64,12 +100,13 @@ export default function UploadFile({ userId, parentId }) {
     setUploading(false);
     setProgress(0);
 
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
     <div className="space-y-6">
-
       <button
         onClick={() => fileInputRef.current?.click()}
         className="flex items-center gap-2 px-4 py-2 border rounded-lg bg-white text-gray-700 shadow-sm hover:bg-gray-50"
@@ -86,7 +123,6 @@ export default function UploadFile({ userId, parentId }) {
       />
 
       <div className="p-8 border border-dashed border-gray-300 rounded-xl bg-white text-center shadow-sm hover:border-indigo-300 transition">
-
         {!file ? (
           <div className="space-y-3">
             <Upload className="h-10 w-10 text-gray-400 mx-auto" />
@@ -95,7 +131,6 @@ export default function UploadFile({ userId, parentId }) {
           </div>
         ) : (
           <div className="space-y-4">
-
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <FileUp className="h-5 w-5 text-indigo-600" />
@@ -151,7 +186,6 @@ export default function UploadFile({ userId, parentId }) {
         <p>✓ Supports JPG, PNG, GIF, PDF</p>
         <p>✓ Max file size — 20MB</p>
       </div>
-
     </div>
   );
 }
