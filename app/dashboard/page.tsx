@@ -1,14 +1,14 @@
-import UploadFile from "@/components/UploadFile";
-import { auth } from "@clerk/nextjs/server";
+import DashboardContent from "@/components/DashboardContent";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
+  const user = await currentUser();
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-
-      <UploadFile userId={userId!} parentId={null} />
-    </div>
+    <DashboardContent
+      userId={userId!}
+      userName={user?.firstName || "User"}
+    />
   );
 }

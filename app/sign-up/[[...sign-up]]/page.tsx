@@ -1,12 +1,13 @@
-import SignUpForm from '@/components/SignUpForm'
-import React from 'react'
+"use client";
 
-function SignUpPage() {
+import SignUpForm from "@/components/SignUpForm";
+
+export default function SignUpPage() {
   return (
-    <div>
-      <SignUpForm/>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-indigo-50/60 to-white">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <SignUpForm />
+      </main>
     </div>
-  )
+  );
 }
-
-export default SignUpPage

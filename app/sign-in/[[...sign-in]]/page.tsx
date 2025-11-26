@@ -1,12 +1,11 @@
-import SignInForm from '@/components/SignInForm'
-import React from 'react'
+import SignInForm from "@/components/SignInForm";
 
-function SignInPage() {
+export default function SignInPage() {
   return (
-    <div>
-      <SignInForm/>
+    <div className="min-h-screen bg-white flex flex-col">
+      <main className="flex flex-1 items-center justify-center px-4">
+        <SignInForm />
+      </main>
     </div>
-  )
+  );
 }
-
-export default SignInPage
